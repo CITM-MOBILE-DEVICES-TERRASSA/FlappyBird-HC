@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         playerRb = GetComponent<Rigidbody2D>();
+        playerAnimator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -34,7 +35,7 @@ public class Player : MonoBehaviour
 
     private void OnCollisionEnter2D()
     {
-        isDead = true; 
-        //Game over??
+        isDead = true;
+        GameManager.Instance.GameOver(); 
     }
 }
