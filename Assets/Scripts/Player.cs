@@ -24,6 +24,10 @@ public class Player : MonoBehaviour
         {
             Flap(); 
         }
+
+        // Rotate the player based on its vertical velocity
+        float angle = Mathf.Lerp(-90, 45, (playerRb.velocity.y + 10) / 20);
+        transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
     private void Flap()
