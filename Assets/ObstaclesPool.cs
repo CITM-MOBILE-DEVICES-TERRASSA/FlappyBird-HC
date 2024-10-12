@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObstaclesPool : MonoBehaviour
 {
-    [SerializeField] private GameObject obstaclePrefab;
+    [SerializeField] private PipesFactory pipesFactory;
     [SerializeField] private int poolSize = 5;
     [SerializeField] private float spawnTime = 2.5f;
     [SerializeField] private float xSpawnPos = 12f;
@@ -19,9 +19,11 @@ public class ObstaclesPool : MonoBehaviour
     void Start()
     {
         obstacles = new GameObject[poolSize];
+        int pipeTypeidx = 0;
         for(int i = 0; i < poolSize; i++)
         {
-            obstacles[i] = Instantiate(obstaclePrefab, transform);
+            obstacles[i] = pipesFactory.CreatePipe((PipesFactory.PipeType)Random.Range(0, 3));
+            obstacles[i].transform.parent = transform;
             obstacles[i].SetActive(false);
         }
     }
