@@ -5,27 +5,41 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private float upForce = 350f;
-
-    private bool isDead; 
+    private bool isDead;
     private Rigidbody2D playerRb;
-    private Animator playerAnimator; 
+    private Animator playerAnimator;
 
-    // Start is called before the first frame update
+    // Referencia al adaptador de entrada
+    private IPlayerInput playerInput;
+
+    // Variable para elegir el método de entrada (puede seleccionarse desde el Inspector)
+    [SerializeField] private bool useKeyboard = true;
+
     void Start()
     {
         playerRb = GetComponent<Rigidbody2D>();
         playerAnimator = GetComponent<Animator>();
+
+        // Selecciona el método de entrada según la opción configurada en el Inspector
+        if (useKeyboard)
+        {
+            playerInput = new KeyboardInput();
+        }
+        else
+        {
+            playerInput = new ControllerInput();
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonDown(0) && !isDead)
+        // Detecta la entrada del jugador según el adaptador seleccionado
+        if (playerInput.GetFlapInput() && !isDead)
         {
-            Flap(); 
+            Flap();
         }
 
-        // Rotate the player based on its vertical velocity
+        // Rotación del jugador basada en su velocidad vertical
         float angle = Mathf.Lerp(-90, 45, (playerRb.velocity.y + 10) / 20);
         transform.rotation = Quaternion.Euler(0, 0, angle);
     }
@@ -40,6 +54,19 @@ public class Player : MonoBehaviour
     private void OnCollisionEnter2D()
     {
         isDead = true;
-        GameManager.Instance.GameOver(); 
+        GameManager.Instance.GameOver();
+    }
+
+    // Método opcional para cambiar el tipo de entrada en tiempo de ejecución (por ejemplo, desde el menú de opciones)
+    public void SetInputMethod(bool useKeyboard)
+    {
+        if (useKeyboard)
+        {
+            playerInput = new KeyboardInput();
+        }
+        else
+        {
+            playerInput = new ControllerInput();
+        }
     }
 }
